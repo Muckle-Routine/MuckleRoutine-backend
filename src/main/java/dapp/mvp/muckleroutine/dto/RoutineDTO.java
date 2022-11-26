@@ -1,5 +1,6 @@
 package dapp.mvp.muckleroutine.dto;
 
+import dapp.mvp.muckleroutine.entity.AppUser;
 import dapp.mvp.muckleroutine.entity.RoutineTerm;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -19,6 +20,9 @@ public class RoutineDTO {
 
     @ApiModelProperty(value = "루틴 번호")
     private Long no;
+
+    @ApiModelProperty(value = "생성자")
+    private AppUser creator;
 
     @ApiModelProperty(value = "제목", required = true)
     private String title;

@@ -23,4 +23,8 @@ public class Board extends BaseEntity{
 
     @Column(nullable = false)
     private String contents;
+
+    @OneToOne
+    @JoinColumn(name = "USER_NO")
+    private AppUser writer;
 }

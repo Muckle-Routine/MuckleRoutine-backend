@@ -1,5 +1,6 @@
 package dapp.mvp.muckleroutine.security;
 
+import antlr.Token;
 import dapp.mvp.muckleroutine.entity.AppUser;
 import dapp.mvp.muckleroutine.entity.KlipRequest;
 import dapp.mvp.muckleroutine.security.dto.AppAuthUserDTO;
@@ -11,12 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
 
 @Log4j2
@@ -28,6 +31,9 @@ public class ApiLoginFilter extends AbstractAuthenticationProcessingFilter{
 	private KlipRequestService klipRequestService;
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	public ApiLoginFilter(String defaultFilterProcessesUrl, JWTUtil jwtUtil) {
 		super(defaultFilterProcessesUrl);
@@ -43,13 +49,12 @@ public class ApiLoginFilter extends AbstractAuthenticationProcessingFilter{
 				AppUser appUser = userService.getAuthedUser(klipRequest);
 				if (appUser != null) {
 					UsernamePasswordAuthenticationToken authToken =
-							new UsernamePasswordAuthenticationToken(appUser.getWalletAddress(), requestNo); //사용자 로그인 인증
-
+							new UsernamePasswordAuthenticationToken(appUser.getWalletAddress(), requestNo); //사용자 로그인 인증 => 여기에서는 pw 암호화 필요X 삽질 ㅠㅠ,,
 					return getAuthenticationManager().authenticate(authToken);
 				}
 			}
 		}
-		throw new AuthenticationServiceException("not valid request.");
+		throw new AuthenticationServiceException("expired requestNo");
 	}
 
 	@Override

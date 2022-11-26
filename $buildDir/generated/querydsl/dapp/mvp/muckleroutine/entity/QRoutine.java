@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -17,9 +18,13 @@ public class QRoutine extends EntityPathBase<Routine> {
 
     private static final long serialVersionUID = -652810748L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QRoutine routine = new QRoutine("routine");
 
     public final StringPath category = createString("category");
+
+    public final QAppUser creator;
 
     public final StringPath description = createString("description");
 
@@ -44,15 +49,24 @@ public class QRoutine extends EntityPathBase<Routine> {
     public final StringPath title = createString("title");
 
     public QRoutine(String variable) {
-        super(Routine.class, forVariable(variable));
+        this(Routine.class, forVariable(variable), INITS);
     }
 
     public QRoutine(Path<? extends Routine> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QRoutine(PathMetadata metadata) {
-        super(Routine.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QRoutine(PathMetadata metadata, PathInits inits) {
+        this(Routine.class, metadata, inits);
+    }
+
+    public QRoutine(Class<? extends Routine> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.creator = inits.isInitialized("creator") ? new QAppUser(forProperty("creator"), inits.get("creator")) : null;
     }
 
 }

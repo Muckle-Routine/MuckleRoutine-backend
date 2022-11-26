@@ -21,9 +21,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -36,6 +34,8 @@ public class AppUserDetailService implements UserDetailsService{
 	private final UserService userservice;
 
 	private final KlipRequestRepository klipRequestRepository;
+
+	private final PasswordEncoder passwordEncoder;
 	
 	@Override
 	public UserDetails loadUserByUsername(String walletAddress) throws UsernameNotFoundException{ //사용자가 존재하지 않으면 Exception 처리
@@ -51,7 +51,8 @@ public class AppUserDetailService implements UserDetailsService{
 
 		AppAuthUserDTO appAuthUser = new AppAuthUserDTO( // UserDetails 타입으로 처리하기 위해서 타입 변
 				userDTO,
-				Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
+				passwordEncoder.encode(userDTO.getRequest().getRequest()),
+				Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")) //접두어 사용해 스프링 시큐리티에서 사용하는 SimpleGrantedAuthority로 변
 		);
 
 		return appAuthUser;

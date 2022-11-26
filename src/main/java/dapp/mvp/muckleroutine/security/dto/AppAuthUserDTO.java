@@ -20,8 +20,8 @@ public class AppAuthUserDTO extends User{
 	
 	private UserDTO userDTO;
 	
-	public AppAuthUserDTO(UserDTO userDTO, Collection<? extends GrantedAuthority> authorities){
-		super(userDTO.getWalletAddress(), userDTO.getRequest().getRequest(), authorities);
+	public AppAuthUserDTO(UserDTO userDTO ,String pw, Collection<? extends GrantedAuthority> authorities){
+		super(userDTO.getWalletAddress(), pw, authorities);
 		this.userDTO = userDTO;
 	}
 }

@@ -2,8 +2,10 @@ package dapp.mvp.muckleroutine.controller;
 
 import dapp.mvp.muckleroutine.dto.ResultDTO;
 import dapp.mvp.muckleroutine.dto.RoutineDTO;
+import dapp.mvp.muckleroutine.entity.AppUser;
 import dapp.mvp.muckleroutine.entity.Routine;
 import dapp.mvp.muckleroutine.service.RoutineService;
+import dapp.mvp.muckleroutine.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +25,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoutineController {
     private final RoutineService routineService;
+    private final UserService userService;
 
     @ApiOperation(value = "루틴 추가", notes = "루틴을 추가할 수 있습니다.")
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> add(@RequestBody RoutineDTO routineDTO) throws Exception{
+    public ResponseEntity<Object> add(@RequestBody RoutineDTO routineDTO, HttpServletRequest request) throws Exception{
         ResultDTO resultDTO = new ResultDTO();
+        AppUser appUser = userService.get(request);
+        routineDTO.setCreator(appUser);
         resultDTO.setResult(routineService.save(routineDTO));
+
+        resultDTO.setStatus("success");
+        resultDTO.setMessage("success");
+        return new ResponseEntity<>(resultDTO, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "루틴 참가", notes = "루틴에 참가할 수 있습니다.")
+    @PostMapping(value = "participate/{routineNo}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> join(@PathVariable Long routineNo, HttpServletRequest request) throws Exception{
+        ResultDTO resultDTO = new ResultDTO();
+        AppUser appUser = userService.get(request);
+        Routine routine = routineService.getOne(routineNo);
+        //TODO contract 조회로 double check
+
+        appUser.addParticipatedRoutine(routine);
+        userService.save(appUser);
 
         resultDTO.setStatus("success");
         resultDTO.setMessage("success");

@@ -1,10 +1,7 @@
 package dapp.mvp.muckleroutine.service.impl;
 
 import dapp.mvp.muckleroutine.dto.CertificationDTO;
-import dapp.mvp.muckleroutine.entity.Board;
-import dapp.mvp.muckleroutine.entity.Certification;
-import dapp.mvp.muckleroutine.entity.CertificationStatus;
-import dapp.mvp.muckleroutine.entity.Routine;
+import dapp.mvp.muckleroutine.entity.*;
 import dapp.mvp.muckleroutine.repository.BoardRepository;
 import dapp.mvp.muckleroutine.repository.CertificationRepository;
 import dapp.mvp.muckleroutine.repository.RoutineRepository;
@@ -13,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,6 +24,7 @@ public class CertificationServiceImpl implements CertificationService {
 
     @Override
     public Certification save(CertificationDTO certificationDTO){
+        certificationDTO.setCertificationDate(LocalDateTime.now());
         return certificationRepository.save(dtoToEntity(certificationDTO));
     }
 
@@ -42,22 +42,26 @@ public class CertificationServiceImpl implements CertificationService {
     }
     @Override
     public Certification getForVote(){
-        Optional<Certification> result = certificationRepository.findTopByStatusOrderByCertificationDateDesc(CertificationStatus.PROCESS);
-        if(result.isPresent())
-            return result.get();
+        List<Certification> result = certificationRepository.findTop20ByStatusOrderByCertificationDateDesc(CertificationStatus.PROCESS);
+        if(result != null && result.size() > 0){
+            //랜텀으로 추첨
+            double randomValue = Math.random();
+            int intValue = (int)(randomValue * result.size() +1);
+            return result.get(intValue);
+        }
 
         return null;
     }
 
     @Override
-    public void vote(Long certificationNo, CertificationStatus status, String failReason){
+    public void vote(AppUser voter, Long certificationNo, CertificationStatus status, String message){
         Optional<Certification> result = certificationRepository.findById(certificationNo);
         if(result.isPresent()){
             Certification certification = result.get();
-            if(status.equals(CertificationStatus.FAIL)){
+            if(message != null && message.length() > 0){
                 certification.addFailCount();
-                Board board = boardRepository.save(Board.builder().contents(failReason).build());
-                certification.addFailReason(board);
+                Board board = boardRepository.save(Board.builder().contents(message).writer(voter).build());
+                certification.addMessage(board);
             }else if(status.equals(CertificationStatus.SUCCESS)){
                 certification.addSuccessCount();
             }

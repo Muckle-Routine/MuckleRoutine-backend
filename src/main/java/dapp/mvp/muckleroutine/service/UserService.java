@@ -8,9 +8,11 @@ import dapp.mvp.muckleroutine.entity.Certification;
 import dapp.mvp.muckleroutine.entity.KlipRequest;
 import dapp.mvp.muckleroutine.entity.Routine;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface UserService {
+    AppUser get(HttpServletRequest request) throws Exception; //api 요청(request)에 따른 사용자 정보 조회
     AppUser getAuthedUser(KlipRequest klipRequest);
 
     AppUser save(AppUser appUser);

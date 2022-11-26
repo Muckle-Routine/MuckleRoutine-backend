@@ -64,7 +64,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	public ApiCheckFilter apiCheckFilter() {
 		HashMap<String, String> patterns = new HashMap<>();
 		//pattern이 겹치지않도록 설정.
-//		patterns.put("/**/*", "ROLE_USER");
+		patterns.put("/certification/*", "ROLE_USER");
+		patterns.put("/routine/add", "ROLE_USER");
+		patterns.put("/routine/participate/*", "ROLE_USER");
+		patterns.put("/user/*", "ROLE_USER");
 
 		return new ApiCheckFilter(patterns, jwtUtil()); //해당 경우에만 checkFilter가 작동하도록
 	}

@@ -4,10 +4,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import dapp.mvp.muckleroutine.dto.ResultDTO;
-import dapp.mvp.muckleroutine.entity.AppUser;
-import dapp.mvp.muckleroutine.entity.KlipRequest;
-import dapp.mvp.muckleroutine.entity.KlipRequestStatus;
-import dapp.mvp.muckleroutine.entity.KlipRequestType;
+import dapp.mvp.muckleroutine.entity.*;
 import dapp.mvp.muckleroutine.repository.AppUserRepository;
 import dapp.mvp.muckleroutine.repository.KlipRequestRepository;
 import dapp.mvp.muckleroutine.repository.RoutineRepository;
@@ -19,6 +16,7 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -37,7 +35,7 @@ public class KlipRequestServiceImpl implements KlipRequestService {
         if(optionalKlipRequest.isPresent()){
             KlipRequest klipRequest = optionalKlipRequest.get();
             long now = System.currentTimeMillis() / 1000;
-            if(now>=klipRequest.getRequestExpiredTime() && klipRequest.getStatus().equals(KlipRequestStatus.COMPLETED))
+            if(now<=klipRequest.getRequestExpiredTime() && klipRequest.getStatus().equals(KlipRequestStatus.COMPLETED))
                 return klipRequest;
         }
         return null;
@@ -87,6 +85,7 @@ public class KlipRequestServiceImpl implements KlipRequestService {
                                 Long expirationTime = Long.valueOf((Integer) jsonObj.getAsNumber("expiration_time"));
                                 JSONObject result = (JSONObject) jsonParser.parse(jsonObj.getAsString("result"));
                                 String address = result.getAsString("klaytn_address");
+
                                 klipRequest.setStatus(KlipRequestStatus.COMPLETED);
                                 klipRequest.setRequestExpiredTime(expirationTime);
                                 klipRequest = klipRequestRepository.save(klipRequest);

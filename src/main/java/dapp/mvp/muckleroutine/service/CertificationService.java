@@ -1,6 +1,7 @@
 package dapp.mvp.muckleroutine.service;
 
 import dapp.mvp.muckleroutine.dto.CertificationDTO;
+import dapp.mvp.muckleroutine.entity.AppUser;
 import dapp.mvp.muckleroutine.entity.Certification;
 import dapp.mvp.muckleroutine.entity.CertificationStatus;
 
@@ -10,14 +11,15 @@ public interface CertificationService {
     Certification getOne(Long routineNo);
     Certification getForVote();
 
-    void vote(Long certificationNo, CertificationStatus status, String failReason);
+    void vote(AppUser voter, Long certificationNo, CertificationStatus status, String message);
 
     default Certification dtoToEntity(CertificationDTO certificationDTO){
         Certification certification = Certification.builder()
+                .uploader(certificationDTO.getUploader())
                 .certification(certificationDTO.getCertification())
                 .certificationDate(certificationDTO.getCertificationDate())
                 .failCount(certificationDTO.getFailCount())
-                .failReasons(certificationDTO.getFailReasons())
+                .messages(certificationDTO.getMessages())
                 .image(certificationDTO.getImage())
                 .no(certificationDTO.getNo())
                 .routine(certificationDTO.getRoutine())
@@ -29,10 +31,11 @@ public interface CertificationService {
     }
     default CertificationDTO entityToDTO(Certification certification){
         CertificationDTO certificationDTO = CertificationDTO.builder()
+                .uploader(certification.getUploader())
                 .certification(certification.getCertification())
                 .certificationDate(certification.getCertificationDate())
                 .failCount(certification.getFailCount())
-                .failReasons(certification.getFailReasons())
+                .messages(certification.getMessages())
                 .image(certification.getImage())
                 .no(certification.getNo())
                 .routine(certification.getRoutine())

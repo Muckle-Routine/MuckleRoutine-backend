@@ -6,12 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity //이 클래스는 JPA로 관리되는 엔티티 객체
@@ -27,6 +24,10 @@ public class Certification extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long no;
 
+    @OneToOne
+    @JoinColumn(name = "USER_NO")
+    private AppUser uploader;
+
     private String certification;
     private String image;
 
@@ -38,7 +39,7 @@ public class Certification extends BaseEntity{
         this.status = status;
     }
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime certificationDate;
 
     @ColumnDefault(value = "0")
@@ -64,12 +65,13 @@ public class Certification extends BaseEntity{
        joinColumns = @JoinColumn(name="CERTIFICATION_NO"),
        inverseJoinColumns = @JoinColumn(name="BOARD_NO")
        )
-    private List<Board> failReasons = new ArrayList<>();
-    public void addFailReason(Board reason){
-        failReasons.add(reason);
+    private List<Board> messages;
+    public void addMessage(Board message){
+        if(message!= null)
+            messages.add(message);
     }
 
     @OneToOne
     @JoinColumn(name = "ROUTINE_NO")
-    private Routine routine = new Routine();
+    private Routine routine;
 }

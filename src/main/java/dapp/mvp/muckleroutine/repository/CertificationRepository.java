@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface CertificationRepository extends JpaRepository<Certification, Long> {
     Optional<Certification> findByRoutine(Routine routine);
 
-    Optional<Certification> findTopByStatusOrderByCertificationDateDesc(CertificationStatus certificationStatus);
+    List<Certification> findTop20ByStatusOrderByCertificationDateDesc(CertificationStatus certificationStatus);
 }

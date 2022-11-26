@@ -28,9 +28,9 @@ public class QCertification extends EntityPathBase<Certification> {
 
     public final NumberPath<Long> failCount = createNumber("failCount", Long.class);
 
-    public final ListPath<Board, QBoard> failReasons = this.<Board, QBoard>createList("failReasons", Board.class, QBoard.class, PathInits.DIRECT2);
-
     public final StringPath image = createString("image");
+
+    public final ListPath<Board, QBoard> messages = this.<Board, QBoard>createList("messages", Board.class, QBoard.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> no = createNumber("no", Long.class);
 
@@ -39,6 +39,8 @@ public class QCertification extends EntityPathBase<Certification> {
     public final EnumPath<CertificationStatus> status = createEnum("status", CertificationStatus.class);
 
     public final NumberPath<Long> successCount = createNumber("successCount", Long.class);
+
+    public final QAppUser uploader;
 
     public final NumberPath<Long> voteCount = createNumber("voteCount", Long.class);
 
@@ -60,7 +62,8 @@ public class QCertification extends EntityPathBase<Certification> {
 
     public QCertification(Class<? extends Certification> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.routine = inits.isInitialized("routine") ? new QRoutine(forProperty("routine")) : null;
+        this.routine = inits.isInitialized("routine") ? new QRoutine(forProperty("routine"), inits.get("routine")) : null;
+        this.uploader = inits.isInitialized("uploader") ? new QAppUser(forProperty("uploader"), inits.get("uploader")) : null;
     }
 
 }

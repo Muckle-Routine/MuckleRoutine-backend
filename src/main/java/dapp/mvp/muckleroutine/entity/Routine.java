@@ -22,6 +22,10 @@ public class Routine extends BaseEntity{
     @Column(name = "ROUTINE_NO")
     private Long no;
 
+    @OneToOne
+    @JoinColumn(name = "USER_NO")
+    private AppUser creator;
+
     @Column(nullable = false)
     private String title, description, category;
 

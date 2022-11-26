@@ -15,15 +15,15 @@ import java.util.Date;
 public class JWTUtil {
 	//1month
 	private long expire = 50 * 24 * 30;
-	private String secretKey = generatePublicKey();
+	private String secretKey = "muckle_Routine";
 	
-	private String generatePublicKey() {
-		// secretKey logic 생성.
-		Date date = new Date();
-		secretKey = date + "muckle_Routine" + date;
-		
-		return secretKey;
-	}
+//	private String generatePublicKey() {
+//		// secretKey logic 생성.
+//		Date date = new Date();
+//		secretKey = date + "muckle_Routine" + date;
+//
+//		return secretKey;
+//	}
 	
 	public String generateToken(String content) throws Exception{
 		

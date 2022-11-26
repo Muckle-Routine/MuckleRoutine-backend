@@ -17,6 +17,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -45,6 +46,10 @@ dependencies {
 
     implementation 'com.squareup.okhttp:okhttp:2.7.5' //okhttp
     implementation 'com.squareup.okio:okio:1.6.0'
+
+    implementation 'org.web3j:core:5.0.0'
+    implementation 'com.klaytn.caver:core:1.9.0'
+    implementation 'com.squareup.okio:okio:3.2.0'
 }
 
 // querydsl 적용

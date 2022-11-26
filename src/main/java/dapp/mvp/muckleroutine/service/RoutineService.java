@@ -14,6 +14,7 @@ public interface RoutineService {
     default Routine dtoToEntity(RoutineDTO routineDTO){
         Routine routine = Routine.builder()
                 .no(routineDTO.getNo())
+                .creator(routineDTO.getCreator())
                 .category(routineDTO.getCategory())
                 .description(routineDTO.getDescription())
                 .endDate(routineDTO.getEndDate())
@@ -32,6 +33,7 @@ public interface RoutineService {
     default RoutineDTO entityToDTO(Routine routine){
             RoutineDTO routineDTO = RoutineDTO.builder()
                     .no(routine.getNo())
+                    .creator(routine.getCreator())
                     .category(routine.getCategory())
                     .description(routine.getDescription())
                     .endDate(routine.getEndDate())

@@ -2,17 +2,14 @@ package dapp.mvp.muckleroutine.dto;
 
 import dapp.mvp.muckleroutine.entity.KlipRequest;
 import dapp.mvp.muckleroutine.entity.Routine;
-import dapp.mvp.muckleroutine.util.JSONUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minidev.json.JSONObject;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -28,4 +25,5 @@ public class UserDTO {
 
 	@ApiModelProperty(value = "참가중인 루틴 목록")
 	private List<Routine> participatedRoutine;
+
 }

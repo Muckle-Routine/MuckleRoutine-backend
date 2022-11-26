@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,6 +31,9 @@ public class KlipRequestDTO {
 
 	@ApiModelProperty(value = "Klip 요청 번호")
 	private String request;
+	public void setRequest(String request){
+		this.request = request;
+	}
 
 	@ApiModelProperty(value = "Klip 요청 만료시간 (unix time)")
 	private Long requestExpiredTime;
